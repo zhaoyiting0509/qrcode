@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telephone=no, email=no">
+    <!--忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
+    <title></title>
+    <style type="text/css">
+        .i-b {
+            margin-bottom: 2px;
+        }
+       
+    </style>
+</head>
+<body>
+        <div class="i-index">
+            <div class="i-all active">
+                <div class="i-tc">
+                    
+                    <div id="tab-info" class="i-b">
+                        <div class="i-bc smxk">
+                            <span id="JianYanZM" class="active">合格检验证明</span>
+                            <span id="ChanPinJBXX" class="">产品基本信息</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="i-tall">
+                    <!-- 合格证明 -->
+                    <div class="i-t active">
+                        <div class="i-tc">
+                            <div class="i-tcc">
+                                <div id="rep2">
+                                </div>
+                          </div> 
+                        </div>
+                    </div>
+                    <!--电池信息 -->
+                    <div class="i-t">
+                        <div class="i-tc">
+                            <div class="i-tcc">
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">电池编号：</span>
+                                    <span class="i-tspanr" id="battery_num"></span>
+                                </div>
+                                
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">蓄电池类型：</span>
+                                    <span class="i-tspanr" id="battery_type"></span>
+                                </div>
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">蓄电池生产企业：</span>
+                                    <span class="i-tspanr" id="battery_company"></span>
+                                </div>
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">蓄电池容量（Ah）：</span>
+                                    <span class="i-tspanr" id="battery_size"></span>
+                                </div>
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">蓄电池型号：</span>
+                                    <span class="i-tspanr" id="battery_model"></span>
+                                </div>
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">蓄电池重量：</span>
+                                    <span class="i-tspanr" id="battery_kg"></span>
+                                </div>
+                                <div class="i-tccc-t">
+                                    <span class="i-tspanl">生产日期：</span>
+                                    <span class="i-tspanr" id="battery_date"></span>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 2.1875rem;"></div>
+            <div class="dbys">
+                <span id="dbys-1">质量服务承诺</span>
+                <span id="dbys-2" class="active">消费信息反馈</span>
+            </div>
+            <div id="i-pop" style="display: none;">
+                <div class="i-pop-c">
+                    <div class="i-close">
+                        <img id="img-close" src="./static/close.png" alt="">
+                    </div>
+                    <div class="i-tcc i-tccp i-tsm">
+                        <span>质量服务承诺</span>
+                    </div>
+                </div>
+            </div>
+            <div id="i-pop1" style="display: none;">
+                <div class="i-pop1-c">
+                    <div class="i-close">
+                        <img src="./static/close.png" alt="">
+                    </div>
+                    <div class="i-tcc i-tccp i-tsm">
+                        <div class="i-form" style="align-items: center;">
+                            <span>联系人</span>
+                            <input type="" name="" id="txtLinkMan" value="">
+                        </div>
+                        <div class="i-form" style="align-items: center;">
+                            <span>联系手机</span>
+                            <input type="" name="" id="txtLinkMobile" value="">
+                        </div>
+                        <div class="i-form">
+                            <span>反馈标签</span>
+                            <div style="margin-top: 10px">
+                                <span class="weixz actives">很满意</span>
+                                <span class="weixz">质量很好</span>
+                                <span class="weixz">商品和描述一致</span>
+                                <span class="weixz">产品检测结果可信度高</span>
+                                <span class="weixz">下次还会回购</span>
+                            </div>
+                        </div>
+                        <div class="i-form">
+                            <span>反馈内容</span>
+                            <textarea rows="" cols="" id="txtFeedbackContent"></textarea>
+                        </div>
+                        <div class="i-form">
+                            <span style="color: red;">如发现产品质量有问题，消费者应先与商家沟通，拨打售后服务电话： 076938868888。   若与商家沟通无结果，可拨打12315投诉。</span>
+                        </div>
+                        <div class="i-form" style="align-items: center; justify-content: center;">
+                            <button type="button" onclick="save()">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script src="./static/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function loadImgs(reportPath) {
+            var fileContainer = document.getElementById('rep2');
+            fileContainer.innerHTML = ''; 
+            var img = document.createElement('img');
+            img.src = reportPath; 
+            img.alt = 'Image';
+            fileContainer.appendChild(img);
+        }
+    $(function () {
+        let windowHeight = window.outerHeight; // 屏幕的高度
+        let windowWidth = window.outerWidth; // 屏幕的宽度
+        $("#battery_num").html(decodeURIComponent(getQueryVariable("battery_num")));
+        $("#battery_type").html(decodeURIComponent(getQueryVariable("battery_type")));
+        $("#battery_company").html(decodeURIComponent(getQueryVariable("battery_company")));
+        $("#battery_size").html(decodeURIComponent(getQueryVariable("battery_size")));
+        $("#battery_model").html(decodeURIComponent(getQueryVariable("battery_model")));
+        $("#battery_kg").html(decodeURIComponent(getQueryVariable("battery_kg")));
+        $("#battery_date").html(decodeURIComponent(getQueryVariable("battery_date")));
+        $("#file_path").html(decodeURIComponent(getQueryVariable("file_path")));
+        loadImgs(getQueryVariable("file_path"))
+        $(".i-bc").on('click', 'span', function () {
+            $(this).addClass('active').siblings().removeClass('active')
+        })
+        //产品信息
+        $("#ChanPinJBXX").on('click', function () {
+            $(".i-tall").find('.i-t').eq(1).addClass('active').siblings().removeClass('active');
+        })
+        //检验证明
+        $("#JianYanZM").click(function () {
+            $(".i-tall").find('.i-t').eq(0).addClass('active').siblings().removeClass('active');
+        });
+        $("#dbys-1").on('click', function () {
+            $("#i-pop").show();
+        })
+        $("#dbys-2").on('click', function () {
+            $("#i-pop1").show()
+        })
+        $(".i-close").on('click', 'img', function () {
+            $("#i-pop1").hide()
+        })
+        $(".i-close").click(function () {
+            $("#i-pop").hide()
+        })
+        $(".weixz").click(function () {
+            if (this.className.indexOf("actives") > 0) {
+                $(this).removeClass("actives");
+            } else {
+                $(this).addClass("actives");
+            }
+        })
+    })
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+
+    function save() {
+        var linkman = $("#txtLinkMan").val();
+        if ($.trim(linkman) == "") {
+            alert("请填写联系人");
+            return;
+        }
+        var linkmobile = $("#txtLinkMobile").val();
+        if ($.trim(linkmobile) == "") {
+            alert("请填写联系电话");
+            return;
+        }
+        if (!(/^1[3456789]\d{9}$/.test(linkmobile))) {
+            alert("手机号码格式有误");
+            return;
+        }
+
+        var labellist = $(".actives");
+        if (labellist.length == 0) {
+            alert("请选择反馈标签，可以选多个");
+            return;
+        }
+
+        var content = $("#txtFeedbackContent").val();
+        if ($.trim(content) == "") {
+            alert("请填写反馈内容");
+            return;
+        }
+
+        var labelstr = "";
+        for (i = 0; i < labellist.length; i++) {
+            labelstr += (labelstr == "" ? "" : ",") + $(labellist[i]).html();
+        }
+       
+        alert("提交成功，请耐心等待客服反馈，无须重复提交");
+    }
+</script>
+</body>
+</html>

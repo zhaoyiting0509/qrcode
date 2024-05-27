@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码生成与预览</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .input-group label {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        .input-group input[type="text"], .input-group select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .input-group select option {
+            line-height: 34px;
+            padding: 10px;
+            font-size: 18px;
+        }
+        .input-group div {
+            flex: 1;
+        }
+        .input-group div img {
+            height: 120px;
+            width: 80px;
+            float: left;
+            margin-right: 10px; 
+            margin-bottom: 10px; 
+        }
+        button {
+            width: 100%;
+            margin: 15px 0;
+            padding: 12px;
+            font-size: 18px;
+            box-sizing: border-box;
+        }
+        #qrCode img {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        @media (min-width: 600px) {
+            .input-group {
+                flex-direction: row;
+            }
+            .input-group label {
+                width: 30%;
+                text-align: right;
+                margin-right: 10px;
+                margin-bottom: 0;
+            }
+            .input-group input[type="text"], .input-group select {
+                flex: 1;
+            }
+            .input-group #images {
+                flex: 1;
+            }
+            .input-group #images img {
+                height: 120px;
+                width: 80px;
+                float: left;
+                margin-right: 10px; 
+            }
+            .input-group #images iframe {
+                height: 120px;
+                width: 80px;
+                float: left;
+                margin-right: 10px; 
+            }
+            button {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>二维码生成与预览</h1>
+        <div class="input-group">
+            <label for="text1">电池编号:</label>
+            <input type="text" id="battery_num" placeholder="电池编号" value="MA53HLYM5191100014560B41011896">
+        </div>
+        <div class="input-group">
+            <label for="text1">蓄电池类型:</label>
+            <input type="text" id="battery_type" placeholder="蓄电池类型" value="锂电">
+        </div>
+        <div class="input-group">
+            <label for="text2">蓄电池生产企业:</label>
+            <select id="battery_company" name="battery_company">
+                <option value="东莞新能安科技有限公司" selected>东莞新能安科技有限公司</option>
+                <option value="星恒电源(滁州)有限公司-24V">星恒电源(滁州)有限公司-24V</option>
+                <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V</option>
+                <option value="山东爱德邦智能科技有限公司">山东爱德邦智能科技有限公司</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="text3">蓄电池容量（Ah）:</label>
+            <input type="text" id="battery_size" placeholder="蓄电池容量（Ah）" value="24">
+        </div>
+        <div class="input-group">
+            <label for="text3">蓄电池型号:</label>
+            <input type="text" id="battery_model" placeholder="蓄电池型号" value="PA4824-G1">
+        </div>
+        <div class="input-group">
+            <label for="text3">蓄电池重量:</label>
+            <input type="text" id="battery_kg" placeholder="蓄电池重量" value="8.5±0.5(kg)">
+        </div>
+        <div class="input-group">
+            <label for="text3">生产日期:</label>
+            <input type="text" id="battery_date" placeholder="生产日期" value="2023-06-01">
+        </div>
+        <div class="input-group">
+            <label for="imageUpload">报告文件:</label>
+            <div id="images" class="images" >
+                <!-- <img src="./report/东莞新能安科技有限公司/产品认证证书.jpg" width="80" height="120" style="float: left;"/> -->
+            </div>
+        </div>
+        <button id="preview">预览</button>
+        <button id="generateQR">生成二维码</button>
+        <div id="result"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        function loadReportPath(battery_company){
+            var fileName = "./report/" + battery_company + ".jpg"
+            return fileName
+        }
+        function loadImgs() {
+            var reportPath = loadReportPath(document.getElementById('battery_company').value.trim()); 
+            var fileContainer = document.getElementById('images');
+            fileContainer.innerHTML = ''; 
+            var a = document.createElement('a');
+            a.href = reportPath;
+            a.innerHTML = reportPath
+            a.target="_blank"
+            fileContainer.appendChild(a);
+        }
+        loadImgs()
+        document.getElementById('battery_company').addEventListener('change', loadImgs);
+
+        function getUrl(){
+            const battery_num = document.getElementById('battery_num').value;
+            const battery_type = document.getElementById('battery_type').value;
+            const battery_company = document.getElementById('battery_company').value;
+            const battery_size = document.getElementById('battery_size').value;
+            const battery_model = document.getElementById('battery_model').value;
+            const battery_kg = document.getElementById('battery_kg').value;
+            const battery_date = document.getElementById('battery_date').value;
+            const reportPath = loadReportPath(battery_company)
+            const url = `index.htm?battery_num=${encodeURIComponent(battery_num)}`
+            +`&battery_type=${encodeURIComponent(battery_type)}`
+            +`&battery_company=${encodeURIComponent(battery_company.substring(0, battery_company.lastIndexOf("-")))}`
+            +`&battery_size=${encodeURIComponent(battery_size)}`
+            +`&battery_model=${encodeURIComponent(battery_model)}`
+            +`&battery_kg=${encodeURIComponent(battery_kg)}`
+            +`&battery_date=${encodeURIComponent(battery_date)}`
+            +`&file_path=${reportPath}`;
+            return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
+        }
+        function genQrCode(urlText, battery_num) {
+            QRCode.toDataURL(urlText, function (err, url) {
+                if (err) console.error(err);
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const img = new Image();
+                img.onload = function() {
+                    const qrSize = img.width;
+                    const maxWidth = qrSize;
+                    const lineHeight = 20;
+                    const padding = 8;
+
+                    // Function to split text into lines
+                    function getLines(ctx, text, maxWidth) {
+                        const words = text.split('');
+                        const lines = [];
+                        let currentLine = words[0];
+
+                        for (let i = 1; i < words.length; i++) {
+                            const word = words[i];
+                            const width = ctx.measureText(currentLine + word).width;
+                            if (width < maxWidth) {
+                                currentLine += word;
+                            } else {
+                                lines.push(currentLine);
+                                currentLine = word;
+                            }
+                        }
+                        lines.push(currentLine);
+                        return lines;
+                    }
+
+                    ctx.font = '20px Arial';
+                    const lines = getLines(ctx, battery_num, maxWidth - padding);
+                    const textHeight = lines.length * lineHeight;
+
+                    canvas.width = qrSize;
+                    canvas.height = qrSize + textHeight + padding;
+
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+
+                    ctx.fillStyle = '#000000';
+                    ctx.textAlign = 'center';
+                    ctx.font = '20px Arial';
+                    for (let i = 0; i < lines.length; i++) {
+                        ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 1) * lineHeight);
+                    }
+
+                    const resultContainer = document.getElementById('result');
+                    resultContainer.innerHTML = '';
+                    const resultImg = document.createElement('img');
+                    resultImg.src = canvas.toDataURL();
+                    resultContainer.appendChild(resultImg);
+                };
+                img.src = url;
+            });
+        }
+        document.getElementById('generateQR').addEventListener('click', function() {
+            const urlText = getUrl();
+            const battery_num = document.getElementById('battery_num').value;
+            genQrCode(urlText, battery_num)
+        });
+        document.getElementById('preview').addEventListener('click', function() {
+                const url = getUrl();
+                window.open(url, '_blank');
+        });
+    </script>
+</body>
+</html>
