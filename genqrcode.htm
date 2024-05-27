@@ -73,7 +73,7 @@
                 margin-right: 10px;
                 margin-bottom: 0;
             }
-            .input-group input[type="text"], .input-group select {
+            .input-group input[type="text"],.input-group input[type="color"], .input-group select {
                 flex: 1;
             }
             .input-group #images {
@@ -95,7 +95,7 @@
                 width: auto;
             }
         }
-    </style>
+    </style>  
 </head>
 <body>
     <div class="container">
@@ -112,8 +112,8 @@
             <label for="text2">蓄电池生产企业:</label>
             <select id="battery_company" name="battery_company">
                 <option value="东莞新能安科技有限公司" selected>东莞新能安科技有限公司</option>
-                <option value="星恒电源(滁州)有限公司-24V">星恒电源(滁州)有限公司-24V</option>
-                <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V</option>
+                <option value="星恒电源(滁州)有限公司-24V">星恒电源(滁州)有限公司-48V 24A</option>
+                <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V 12A</option>
                 <option value="山东爱德邦智能科技有限公司">山东爱德邦智能科技有限公司</option>
             </select>
         </div>
@@ -138,6 +138,14 @@
             <div id="images" class="images" >
                 <!-- <img src="./report/东莞新能安科技有限公司/产品认证证书.jpg" width="80" height="120" style="float: left;"/> -->
             </div>
+        </div>
+        <div class="input-group">
+            <label for="text3">二维码背景色:</label>
+            <input type="color" id="dark_color" value="#D3D3D3">
+        </div>
+        <div class="input-group">
+            <label for="text3">二维码文字颜色:</label>
+            <input type="color" id="light_color" value="#000000">
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
@@ -182,8 +190,13 @@
             +`&file_path=${reportPath}`;
             return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
         }
-        function genQrCode(urlText, battery_num) {
-            QRCode.toDataURL(urlText, function (err, url) {
+        function genQrCode(urlText, battery_num, light, dark) {
+            QRCode.toDataURL(urlText, {
+                color: {
+                    light: light,
+                    dark: dark
+                }
+            }, function (err, url) {
                 if (err) console.error(err);
 
                 const canvas = document.createElement('canvas');
@@ -223,11 +236,11 @@
                     canvas.width = qrSize;
                     canvas.height = qrSize + textHeight + padding;
 
-                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillStyle = light;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
 
-                    ctx.fillStyle = '#000000';
+                    ctx.fillStyle = dark;
                     ctx.textAlign = 'center';
                     ctx.font = '20px Arial';
                     for (let i = 0; i < lines.length; i++) {
@@ -246,7 +259,9 @@
         document.getElementById('generateQR').addEventListener('click', function() {
             const urlText = getUrl();
             const battery_num = document.getElementById('battery_num').value;
-            genQrCode(urlText, battery_num)
+            const dark_color = document.getElementById('dark_color').value;
+            const light_color = document.getElementById('light_color').value;
+            genQrCode(urlText, battery_num, light_color, dark_color)
         });
         document.getElementById('preview').addEventListener('click', function() {
                 const url = getUrl();
