@@ -115,6 +115,7 @@
                 <option value="星恒电源(滁州)有限公司-24V">星恒电源(滁州)有限公司-48V 24A</option>
                 <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V 12A</option>
                 <option value="山东爱德邦智能科技有限公司">山东爱德邦智能科技有限公司</option>
+                <option value="厦门新能安科技有限公司" >厦门新能安科技有限公司</option>
             </select>
         </div>
         <div class="input-group">
@@ -180,9 +181,13 @@
             const battery_kg = document.getElementById('battery_kg').value;
             const battery_date = document.getElementById('battery_date').value;
             const reportPath = loadReportPath(battery_company)
+            var real_battery_company = battery_company;
+            if(battery_company.lastIndexOf("-") > 0){
+                real_battery_company = battery_company.substring(0, battery_company.lastIndexOf("-"))
+            }
             const url = `index.htm?battery_num=${encodeURIComponent(battery_num)}`
             +`&battery_type=${encodeURIComponent(battery_type)}`
-            +`&battery_company=${encodeURIComponent(battery_company.substring(0, battery_company.lastIndexOf("-")))}`
+            +`&battery_company=${encodeURIComponent(real_battery_company)}`
             +`&battery_size=${encodeURIComponent(battery_size)}`
             +`&battery_model=${encodeURIComponent(battery_model)}`
             +`&battery_kg=${encodeURIComponent(battery_kg)}`
