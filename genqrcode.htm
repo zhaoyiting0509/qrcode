@@ -233,9 +233,10 @@
                         return lines;
                     }
 
+
                     ctx.font = '20px Arial';
                     const lines = getLines(ctx, battery_num, maxWidth - padding);
-                    const textHeight = lines.length * lineHeight;
+                    const textHeight = (lines.length + 1) * lineHeight*1.2;
 
                     canvas.width = qrSize;
                     canvas.height = qrSize + textHeight + padding;
@@ -246,9 +247,11 @@
 
                     ctx.fillStyle = dark;
                     ctx.textAlign = 'center';
+                    ctx.font = '24px Arial';
+                    ctx.fillText('浙品码', qrSize / 2, qrSize + lineHeight);
                     ctx.font = '20px Arial';
                     for (let i = 0; i < lines.length; i++) {
-                        ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 1) * lineHeight);
+                        ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 2) * lineHeight*1.2);
                     }
 
                     const resultContainer = document.getElementById('result');
