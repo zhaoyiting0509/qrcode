@@ -100,7 +100,7 @@
     <div class="container">
         <h1>二维码生成与预览</h1>
         <div class="input-group">
-            <label for="text1">电池编号:</label>
+            <label for="text1">电池编号（可填多个）:</label>
             <textarea id="battery_num" rows="3" placeholder="电池编号">MA53HLYM5191100014560B41011896</textarea>
         </div>
         <div class="input-group">
@@ -145,15 +145,17 @@
         </div>
         <div class="input-group">
             <label for="text3">二维码背景颜色:</label>
-            <input type="color" id="light_color" value="#000000">
+            <input type="color" id="light_color" enableAlpha value="#ffffff00">
+            <input type="checkbox" id="light_color_t" name="透明">
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
-        <button id="downloadQR">下载二维码</button>
+        <button id="downloadQR">打包下载二维码</button>
         <div id="result"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="./static/qrcode.min.js"></script>
+    <script src="./static/jszip.min.js"></script>
     <script>
         function loadReportPath(battery_company){
             var fileName = "./report/" + battery_company + ".jpg"
@@ -194,6 +196,33 @@
             +`&file_path=${reportPath}`;
             return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
         }
+        
+        document.getElementById('preview').addEventListener('click', function() {
+            const battery_nums = document.getElementById('battery_num').value;
+            const url = getUrl(battery_nums.split("\n")[0]);
+            window.open(url, '_blank');
+        });
+        document.getElementById('generateQR').addEventListener('click', function() {
+            const battery_nums = document.getElementById('battery_num').value;
+            const dark_color = document.getElementById('dark_color').value;
+            const light_color = document.getElementById('light_color').value;
+            document.getElementById('result').innerHTML = '';
+            battery_nums.split("\n").forEach(battery_num => {
+                const urlText = getUrl(battery_num);
+                genQrCode(urlText, battery_num, light_color, dark_color)
+            })
+        });
+        document.getElementById('downloadQR').addEventListener('click', function () {
+            const images = document.querySelectorAll('img');
+            var zip = new JSZip();
+            images.forEach(img => {
+                const imgName = img.alt + ".jpg";
+                zip.file(imgName, dataURLToBlob(img.src));
+            });
+            downloadZip(zip)
+        });
+    </script>
+    <script>
         function genQrCode(urlText, battery_num, light, dark) {
             QRCode.toDataURL(urlText, {
                 color: {
@@ -263,39 +292,46 @@
                 img.src = url;
             });
         }
-        document.getElementById('generateQR').addEventListener('click', function() {
-            const battery_nums = document.getElementById('battery_num').value;
-            const dark_color = document.getElementById('dark_color').value;
-            const light_color = document.getElementById('light_color').value;
-            document.getElementById('result').innerHTML = '';
-            battery_nums.split("\n").forEach(battery_num => {
-                const urlText = getUrl(battery_num);
-                genQrCode(urlText, battery_num, light_color, dark_color)
-            })
-        });
-        document.getElementById('preview').addEventListener('click', function() {
-                const battery_nums = document.getElementById('battery_num').value;
-                const url = getUrl(battery_nums.split("\n")[0]);
-                window.open(url, '_blank');
-        });
-        function downloadIamge(img, name) {
-            // 将图片的src属性作为URL地址
-            var url = img.src
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
-            
-            a.download = name || '下载图片名称'
-            a.href = url
-            
-            a.dispatchEvent(event)
+        function getDateStr(now){
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1; // 月份从0开始，因此需要加1
+            var day = now.getDate();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            return year+''+month+''+ day+''+ hours+''+ minutes+''+ seconds;
         }
-        document.getElementById('downloadQR').addEventListener('click', function () {
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                const imgName = img.alt + ".jpg";
-                downloadIamge(img, imgName)
-            });
-        });
+        function downloadZip(zip) {
+            // 生成zip文件并下载
+            zip.generateAsync({ 
+                type: 'blob'
+                }).then(function(content) {
+                // 下载的文件名
+                var filename = 'download' + getDateStr(new Date()) + '.zip';
+                // 创建隐藏的可下载链接
+                var eleLink = document.createElement('a');
+                eleLink.download = filename;
+                eleLink.style.display = 'none';
+                // 下载内容转变成blob地址
+                eleLink.href = URL.createObjectURL(content);
+                // 触发点击
+                document.body.appendChild(eleLink);
+                eleLink.click();
+                // 然后移除
+                document.body.removeChild(eleLink);
+                });
+        }
+        function dataURLToBlob(dataurl) {
+            let arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n)
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n)
+            }
+            return new Blob([u8arr], { type: mime })
+        }
     </script>
 </body>
 </html>
