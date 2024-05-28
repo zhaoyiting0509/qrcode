@@ -230,59 +230,9 @@
                     dark: dark
                 }
             }, function (err, url) {
-                if (err) console.error(err);
-
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
                 const img = new Image();
                 img.onload = function() {
-                    const qrSize = img.width;
-                    const maxWidth = qrSize;
-                    const lineHeight = 20;
-                    const padding = 8;
-
-                    // Function to split text into lines
-                    function getLines(ctx, text, maxWidth) {
-                        const words = text.split('');
-                        const lines = [];
-                        let currentLine = words[0];
-
-                        for (let i = 1; i < words.length; i++) {
-                            const word = words[i];
-                            const width = ctx.measureText(currentLine + word).width;
-                            if (width < maxWidth) {
-                                currentLine += word;
-                            } else {
-                                lines.push(currentLine);
-                                currentLine = word;
-                            }
-                        }
-                        lines.push(currentLine);
-                        return lines;
-                    }
-
-
-                    ctx.font = 'bold 20px Arial';
-                    const lines = getLines(ctx, battery_num, maxWidth - padding);
-                    const textHeight = (lines.length + 1) * lineHeight*1.2;
-
-                    canvas.width = qrSize;
-                    canvas.height = qrSize + textHeight + padding;
-
-                    ctx.fillStyle = light;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-
-                    ctx.fillStyle = dark;
-                    ctx.textAlign = 'center';
-                    ctx.font = 'bold 24px Arial';
-                    ctx.fillText('浙品码', qrSize / 2, qrSize + lineHeight);
-                    ctx.font = 'bold 20px Arial';
-                    for (let i = 0; i < lines.length; i++) {
-                        ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 2) * lineHeight*1.2);
-                    }
-
+                    const canvas = addTextCanvas(img, battery_num, light, dark)
                     const resultContainer = document.getElementById('result');
                     const resultImg = document.createElement('img');
                     resultImg.src = canvas.toDataURL();
@@ -291,6 +241,55 @@
                 };
                 img.src = url;
             });
+        }
+        function addTextCanvas(img, battery_num, light, dark){
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const qrSize = img.width;
+            const maxWidth = qrSize;
+            const lineHeight = 20;
+            const padding = 8;
+
+            function getLines(ctx, text, maxWidth) {
+                const words = text.split('');
+                const lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    const word = words[i];
+                    const width = ctx.measureText(currentLine + word).width;
+                    if (width < maxWidth) {
+                        currentLine += word;
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            }
+
+
+            ctx.font = 'bold 20px Arial';
+            const lines = getLines(ctx, battery_num, maxWidth - padding);
+            const textHeight = (lines.length + 1) * lineHeight*1.2;
+
+            canvas.width = qrSize;
+            canvas.height = qrSize + textHeight + padding;
+
+            ctx.fillStyle = light;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+
+            ctx.fillStyle = dark;
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('浙品码', qrSize / 2, qrSize + lineHeight);
+            ctx.font = 'bold 20px Arial';
+            for (let i = 0; i < lines.length; i++) {
+                ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 2) * lineHeight*1.2);
+            }
+            return canvas;
         }
         function getDateStr(now){
             var year = now.getFullYear();
