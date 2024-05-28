@@ -30,7 +30,7 @@
             margin-bottom: 5px;
             font-size: 18px;
         }
-        .input-group input[type="text"], .input-group select {
+        .input-group input[type="text"],.input-group textarea, .input-group select {
             width: 100%;
             padding: 12px;
             font-size: 16px;
@@ -72,7 +72,7 @@
                 margin-right: 10px;
                 margin-bottom: 0;
             }
-            .input-group input[type="text"],.input-group input[type="color"], .input-group select {
+            .input-group input[type="text"],.input-group input[type="color"],.input-group textarea, .input-group select {
                 flex: 1;
             }
             .input-group #images {
@@ -101,7 +101,7 @@
         <h1>二维码生成与预览</h1>
         <div class="input-group">
             <label for="text1">电池编号:</label>
-            <input type="text" id="battery_num" placeholder="电池编号" value="MA53HLYM5191100014560B41011896">
+            <textarea id="battery_num" rows="3" placeholder="电池编号">MA53HLYM5191100014560B41011896</textarea>
         </div>
         <div class="input-group">
             <label for="text1">蓄电池类型:</label>
@@ -149,6 +149,7 @@
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
+        <button id="downloadQR">下载二维码</button>
         <div id="result"></div>
     </div>
 
@@ -171,8 +172,7 @@
         loadImgs()
         document.getElementById('battery_company').addEventListener('change', loadImgs);
 
-        function getUrl(){
-            const battery_num = document.getElementById('battery_num').value;
+        function getUrl(battery_num){
             const battery_type = document.getElementById('battery_type').value;
             const battery_company = document.getElementById('battery_company').value;
             const battery_size = document.getElementById('battery_size').value;
@@ -252,24 +252,46 @@
                     }
 
                     const resultContainer = document.getElementById('result');
-                    resultContainer.innerHTML = '';
                     const resultImg = document.createElement('img');
                     resultImg.src = canvas.toDataURL();
+                    resultImg.alt = battery_num;
                     resultContainer.appendChild(resultImg);
                 };
                 img.src = url;
             });
         }
         document.getElementById('generateQR').addEventListener('click', function() {
-            const urlText = getUrl();
-            const battery_num = document.getElementById('battery_num').value;
+            const battery_nums = document.getElementById('battery_num').value;
             const dark_color = document.getElementById('dark_color').value;
             const light_color = document.getElementById('light_color').value;
-            genQrCode(urlText, battery_num, light_color, dark_color)
+            document.getElementById('result').innerHTML = '';
+            battery_nums.split("\n").forEach(battery_num => {
+                const urlText = getUrl(battery_num);
+                genQrCode(urlText, battery_num, light_color, dark_color)
+            })
         });
         document.getElementById('preview').addEventListener('click', function() {
-                const url = getUrl();
+                const battery_nums = document.getElementById('battery_num').value;
+                const url = getUrl(battery_nums.split("\n")[0]);
                 window.open(url, '_blank');
+        });
+        function downloadIamge(img, name) {
+            // 将图片的src属性作为URL地址
+            var url = img.src
+            var a = document.createElement('a')
+            var event = new MouseEvent('click')
+            
+            a.download = name || '下载图片名称'
+            a.href = url
+            
+            a.dispatchEvent(event)
+        }
+        document.getElementById('downloadQR').addEventListener('click', function () {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                const imgName = img.alt + ".jpg";
+                downloadIamge(img, imgName)
+            });
         });
     </script>
 </body>
