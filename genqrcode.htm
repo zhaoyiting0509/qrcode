@@ -234,7 +234,7 @@
                     }
 
 
-                    ctx.font = '20px Arial';
+                    ctx.font = 'bold 20px Arial';
                     const lines = getLines(ctx, battery_num, maxWidth - padding);
                     const textHeight = (lines.length + 1) * lineHeight*1.2;
 
@@ -247,9 +247,9 @@
 
                     ctx.fillStyle = dark;
                     ctx.textAlign = 'center';
-                    ctx.font = '24px Arial';
+                    ctx.font = 'bold 24px Arial';
                     ctx.fillText('浙品码', qrSize / 2, qrSize + lineHeight);
-                    ctx.font = '20px Arial';
+                    ctx.font = 'bold 20px Arial';
                     for (let i = 0; i < lines.length; i++) {
                         ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 2) * lineHeight*1.2);
                     }
