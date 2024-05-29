@@ -115,6 +115,12 @@
                 <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V 12A</option>
                 <option value="山东爱德邦智能科技有限公司">山东爱德邦智能科技有限公司</option>
                 <option value="厦门新能安科技有限公司" >厦门新能安科技有限公司</option>
+                <option value="台州爱德邦智能科技有限公司">台州爱德邦智能科技有限公司</option>
+                <option value="浙江超威创元实业有限公司-24V">浙江超威创元实业有限公司-DZ48NZ-24EM</option>
+                <option value="浙江超恒动力科技有限公司">浙江超恒动力科技有限公司</option>
+                <option value="湖州天丰电源有限公司">湖州天丰电源有限公司</option>
+                <option value="浙江超威创元实业有限公司-48V">浙江超威创元实业有限公司-48V 16A</option>
+                <option value="山东爱德邦智能科技有限公司-48V">山东爱德邦智能科技有限公司-DZ48NZ-24AM</option>
             </select>
         </div>
         <div class="input-group">
@@ -182,8 +188,8 @@
             const battery_date = document.getElementById('battery_date').value;
             const reportPath = loadReportPath(battery_company)
             var real_battery_company = battery_company;
-            if(battery_company.lastIndexOf("-") > 0){
-                real_battery_company = battery_company.substring(0, battery_company.lastIndexOf("-"))
+            if(battery_company.indexOf("-") > 0){
+                real_battery_company = battery_company.substring(0, battery_company.indexOf("-"))
             }
             const url = `index.htm?battery_num=${encodeURIComponent(battery_num)}`
             +`&battery_type=${encodeURIComponent(battery_type)}`
