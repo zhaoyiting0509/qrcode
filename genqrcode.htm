@@ -129,7 +129,7 @@
         </div>
         <div class="input-group">
             <label for="text3">蓄电池型号:</label>
-            <input type="text" id="battery_model" placeholder="蓄电池型号" value="PA4824-G1">
+            <input type="text" id="battery_model" placeholder="蓄电池型号" value="DZ48N-24EM">
         </div>
         <div class="input-group">
             <label for="text3">蓄电池重量:</label>
@@ -155,7 +155,8 @@
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
-        <button id="downloadQR">打包下载二维码</button>
+        <button id="downloadQR">独立下载</button>
+        <button id="downloadZip">打包下载</button>
         <div id="result"></div>
     </div>
 
@@ -219,6 +220,13 @@
             })
         });
         document.getElementById('downloadQR').addEventListener('click', function () {
+            const svgDivs = document.querySelectorAll('.svg-code');
+            svgDivs.forEach(svgDiv => {
+                const imgName = svgDiv.name + ".svg";
+                downloadSvg(svgDiv.innerHTML, imgName)
+            });
+        });
+        document.getElementById('downloadZip').addEventListener('click', function () {
             const svgDivs = document.querySelectorAll('.svg-code');
             var zip = new JSZip();
             svgDivs.forEach(svgDiv => {
@@ -349,6 +357,15 @@
                 // 然后移除
                 document.body.removeChild(eleLink);
                 });
+        }
+        function downloadSvg(xml, name) {
+            var a = document.createElement('a')
+            var event = new MouseEvent('click')
+            
+            a.download = name || '下载图片名称'
+            a.href = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(xml)));
+            
+            a.dispatchEvent(event)
         }
         function dataURLToBlob(dataurl) {
             let arr = dataurl.split(','),
