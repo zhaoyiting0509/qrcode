@@ -260,10 +260,11 @@
             svg.setAttribute('height', height+(rate*addScale));
             svg.setAttribute('viewBox', `0 0 ${scale} ${scale+addScale}`);
             path.setAttribute('d', `M0 0h${scale}v${scale+addScale}H0z`)
-            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="6px" font-style="normal" font-weight="bold" text-decoration="normal" x="42" y="${scale+6}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
+            const x = scale / 2
+            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="6px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${scale+6}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
             words.forEach((word, index) => {
                 const y = scale+7+((index + 1)*5)
-                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="5px" font-style="normal" font-weight="bold" text-decoration="normal" x="42" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
+                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="5px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
             })
             svg.innerHTML += innerHTML
         }
