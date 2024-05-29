@@ -155,8 +155,8 @@
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
-        <button id="downloadQR">独立下载</button>
-        <button id="downloadZip">打包下载</button>
+        <button id="downloadPng">png打包下载</button>
+        <button id="downloadSvg">svg打包下载</button>
         <div id="result"></div>
     </div>
 
@@ -219,21 +219,27 @@
                 genQrCode(urlText, battery_num, light_color, dark_color)
             })
         });
-        document.getElementById('downloadQR').addEventListener('click', function () {
+        document.getElementById('downloadPng').addEventListener('click', function () {
             const svgDivs = document.querySelectorAll('.svg-code');
-            svgDivs.forEach(svgDiv => {
-                const imgName = svgDiv.name + ".svg";
-                downloadSvg(svgDiv.innerHTML, imgName)
+            var zip = new JSZip();
+            svgDivs.forEach((svgDiv,index) => {
+                const imgName = svgDiv.name + ".png";
+                svg2Png(svgDiv.innerHTML, function(base64) {
+                    zip.file(imgName, base64)
+                    if(index === svgDivs.length - 1){
+                        downloadZip(zip, 'png')
+                    }
+                })
             });
         });
-        document.getElementById('downloadZip').addEventListener('click', function () {
+        document.getElementById('downloadSvg').addEventListener('click', function () {
             const svgDivs = document.querySelectorAll('.svg-code');
             var zip = new JSZip();
             svgDivs.forEach(svgDiv => {
                 const imgName = svgDiv.name + ".svg";
                 zip.file(imgName, svgDiv.innerHTML);
             });
-            downloadZip(zip)
+            downloadZip(zip, 'svg')
         });
     </script>
     <script>
@@ -338,13 +344,13 @@
             var seconds = now.getSeconds();
             return year+''+month+''+ day+''+ hours+''+ minutes+''+ seconds;
         }
-        function downloadZip(zip) {
+        function downloadZip(zip, suffix) {
             // 生成zip文件并下载
             zip.generateAsync({ 
                 type: 'blob'
                 }).then(function(content) {
                 // 下载的文件名
-                var filename = 'download' + getDateStr(new Date()) + '.zip';
+                var filename = 'download_' + suffix + "_" + getDateStr(new Date()) + '.zip';
                 // 创建隐藏的可下载链接
                 var eleLink = document.createElement('a');
                 eleLink.download = filename;
@@ -358,14 +364,18 @@
                 document.body.removeChild(eleLink);
                 });
         }
-        function downloadSvg(xml, name) {
-            var a = document.createElement('a')
-            var event = new MouseEvent('click')
-            
-            a.download = name || '下载图片名称'
-            a.href = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(xml)));
-            
-            a.dispatchEvent(event)
+        function svg2Png(svg, callback){
+            var img = document.createElement('img');
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            img.onload = function(){
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img,0,0);
+                const imgBase64=dataURLToBlob(canvas.toDataURL('image/png'))
+                callback(imgBase64)
+            }
+            img.src = 'data:image/svg+xml;base64,'+window.btoa(unescape(encodeURIComponent(svg)))
         }
         function dataURLToBlob(dataurl) {
             let arr = dataurl.split(','),
