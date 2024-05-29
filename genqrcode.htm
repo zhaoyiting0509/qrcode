@@ -212,7 +212,8 @@
             const dark_color = document.getElementById('dark_color').value;
             const light_color = document.getElementById('light_color').value;
             document.getElementById('result').innerHTML = '';
-            battery_nums.split("\n").forEach(battery_num => {
+            const disArray = Array.from(new Set(battery_nums.split("\n")))
+            disArray.forEach(battery_num => {
                 const urlText = getUrl(battery_num);
                 genQrCode(urlText, battery_num, light_color, dark_color)
             })
