@@ -145,8 +145,7 @@
         </div>
         <div class="input-group">
             <label for="text3">二维码背景颜色:</label>
-            <input type="color" id="light_color" enableAlpha value="#ffffff00">
-            <input type="checkbox" id="light_color_t" name="透明">
+            <input type="color" id="light_color" enableAlpha value="#ffffff">
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
@@ -213,51 +212,75 @@
             })
         });
         document.getElementById('downloadQR').addEventListener('click', function () {
-            const images = document.querySelectorAll('img');
+            const svgDivs = document.querySelectorAll('.svg-code');
             var zip = new JSZip();
-            images.forEach(img => {
-                const imgName = img.alt + ".jpg";
-                zip.file(imgName, dataURLToBlob(img.src));
+            svgDivs.forEach(svgDiv => {
+                const imgName = svgDiv.name + ".svg";
+                zip.file(imgName, svgDiv.innerHTML);
             });
             downloadZip(zip)
         });
     </script>
     <script>
         function genQrCode(urlText, battery_num, light, dark) {
-            QRCode.toDataURL(urlText, {
+            QRCode.toString(urlText, {
+                type: "svg",
+                width: 340,
                 color: {
                     light: light,
                     dark: dark
                 }
-            }, function (err, url) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = addTextCanvas(img, battery_num, light, dark)
-                    const resultContainer = document.getElementById('result');
-                    const resultImg = document.createElement('img');
-                    resultImg.src = canvas.toDataURL();
-                    resultImg.alt = battery_num;
-                    resultContainer.appendChild(resultImg);
-                };
-                img.src = url;
+            }, function (err, svg) {
+                const resultContainer = document.getElementById('result');
+                const div = document.createElement('div');
+                div.id = 'id' + battery_num
+                div.name = battery_num
+                div.className = 'svg-code'
+                div.innerHTML = svg
+                resultContainer.appendChild(div);
+                addTextSvg(battery_num, light, dark)
             });
         }
-        function addTextCanvas(img, battery_num, light, dark){
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const qrSize = img.width;
-            const maxWidth = qrSize;
-            const lineHeight = 20;
-            const padding = 8;
+        function addTextSvg(battery_num, light, dark){
+            const svg = document.querySelector(`#id${battery_num} svg`);
+            const path = document.querySelectorAll(`#id${battery_num} svg path`)[0]
+            console.info(svg)
+            const height = Number(svg.getAttribute('height'));
+            const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
+            const rate = Number(height / scale);
+            const words = lengthCutting(battery_num, 20)
+            const addUnit = 1 + words.length
+            const addScale = addUnit * 6 + 2
+            svg.setAttribute('height', height+(rate*addScale));
+            svg.setAttribute('viewBox', `0 0 ${scale} ${scale+addScale}`);
+            path.setAttribute('d', `M0 0h${scale}v${scale+addScale}H0z`)
+            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="6px" font-style="normal" font-weight="bold" text-decoration="normal" x="42" y="${scale+6}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
+            words.forEach((word, index) => {
+                const y = scale+7+((index + 1)*5)
+                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="5px" font-style="normal" font-weight="bold" text-decoration="normal" x="42" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
+            })
+            svg.innerHTML += innerHTML
+        }
+        function lengthCutting(str, num) {
+            let reg = new RegExp(`(.{${num}})`),
+            arr = str.split(reg);
+            arr = arr.filter(item => item != "");
+            return arr;
+        }
+        function addTextCanvas(battery_num, light, dark){
+            const qrSize = 340;
+            const maxWidth = qrSize
 
-            function getLines(ctx, text, maxWidth) {
+            function getLines(text, maxWidth) {
+                var cttx = document.createElement('canvas').getContext('2d');
+                cttx.font = 'bold 20px Arial';
                 const words = text.split('');
                 const lines = [];
                 let currentLine = words[0];
 
                 for (let i = 1; i < words.length; i++) {
                     const word = words[i];
-                    const width = ctx.measureText(currentLine + word).width;
+                    const width = cttx.measureText(currentLine + word).width;
                     if (width < maxWidth) {
                         currentLine += word;
                     } else {
@@ -270,16 +293,15 @@
             }
 
 
-            ctx.font = 'bold 20px Arial';
-            const lines = getLines(ctx, battery_num, maxWidth - padding);
+            const lineHeight = 20;
+            const padding = 8;
+            const lines = getLines(battery_num, maxWidth - padding);
             const textHeight = (lines.length + 1) * lineHeight*1.2;
 
-            canvas.width = qrSize;
-            canvas.height = qrSize + textHeight + padding;
-
+            var ctx = new C2S(qrSize,qrSize + textHeight + padding);
             ctx.fillStyle = light;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
+            ctx.fillRect(0, 0, qrSize, qrSize + textHeight + padding);
+            // ctx.drawImage(img, 0, 0);
 
             ctx.fillStyle = dark;
             ctx.textAlign = 'center';
@@ -289,7 +311,7 @@
             for (let i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], qrSize / 2, qrSize + (i + 2) * lineHeight*1.2);
             }
-            return canvas;
+            return ctx;
         }
         function getDateStr(now){
             var year = now.getFullYear();
