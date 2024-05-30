@@ -246,6 +246,7 @@
         function genQrCode(urlText, battery_num, light, dark) {
             QRCode.toString(urlText, {
                 type: "svg",
+                scale: 4,
                 width: 340,
                 color: {
                     light: light,
