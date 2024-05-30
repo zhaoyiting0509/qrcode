@@ -147,7 +147,7 @@
         </div>
         <div class="input-group">
             <label for="text3">二维码文字颜色:</label>
-            <input type="color" id="dark_color" value="#D3D3D3">
+            <input type="color" id="dark_color" value="#000000">
         </div>
         <div class="input-group">
             <label for="text3">二维码背景颜色:</label>
@@ -265,21 +265,21 @@
         function addTextSvg(battery_num, light, dark){
             const svg = document.querySelector(`#id${battery_num} svg`);
             const path = document.querySelectorAll(`#id${battery_num} svg path`)[0]
-            console.info(svg)
             const height = Number(svg.getAttribute('height'));
             const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
             const rate = Number(height / scale);
-            const words = lengthCutting(battery_num, 20)
+            const words = lengthCutting(battery_num, 18)
             const addUnit = 1 + words.length
-            const addScale = addUnit * 6 + 2
+            const fontSize = 6
+            const addScale = addUnit * fontSize + fontSize / 2
             svg.setAttribute('height', height+(rate*addScale));
             svg.setAttribute('viewBox', `0 0 ${scale} ${scale+addScale}`);
             path.setAttribute('d', `M0 0h${scale}v${scale+addScale}H0z`)
             const x = scale / 2
-            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="6px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${scale+6}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
+            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="${fontSize + 1}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${scale+fontSize}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
             words.forEach((word, index) => {
-                const y = scale+7+((index + 1)*5)
-                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="5px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
+                const y = scale+ fontSize + 1+((index + 1)*fontSize)
+                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="${fontSize}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
             })
             svg.innerHTML += innerHTML
         }
