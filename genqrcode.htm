@@ -122,6 +122,7 @@
                 <option value="浙江超威创元实业有限公司-48V">浙江超威创元实业有限公司-48V 16A</option>
                 <option value="山东爱德邦智能科技有限公司-48V">山东爱德邦智能科技有限公司-DZ48NZ-24AM</option>
                 <option value="旭派电源有限公司">旭派电源有限公司</option>
+                <option value="天能帅福得能源股份有限公司">天能帅福得能源股份有限公司</option>
             </select>
         </div>
         <div class="input-group">
@@ -272,7 +273,7 @@
             const rate = Number(height / scale);
             const words = lengthCutting(battery_num, 18)
             const addUnit = 1 + words.length
-            const fontSize = 6
+            const fontSize = 24 / rate
             const addScale = addUnit * fontSize + fontSize / 2
             svg.setAttribute('height', height+(rate*addScale));
             svg.setAttribute('viewBox', `0 0 ${scale} ${scale+addScale}`);
