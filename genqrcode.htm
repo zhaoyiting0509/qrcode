@@ -148,12 +148,18 @@
             </div>
         </div>
         <div class="input-group">
-            <label for="text3">二维码文字颜色:</label>
+            <label for="text3">二维码颜色:</label>
             <input type="color" id="dark_color" value="#000000">
         </div>
         <div class="input-group">
             <label for="text3">二维码背景颜色:</label>
-            <input type="color" id="light_color" enableAlpha value="#ffffff">
+            <input type="color" id="light_color" value="#ffffff">
+            &nbsp;&nbsp;&nbsp;透明：
+            <input type="checkbox" id="light_opacity" enableAlpha checked>
+        </div>
+        <div class="input-group">
+            <label for="text3">文字颜色:</label>
+            <input type="color" id="font_color" value="#2628ff">
         </div>
         <button id="preview">预览</button>
         <button id="generateQR">生成二维码</button>
@@ -214,11 +220,13 @@
             const battery_nums = document.getElementById('battery_num').value;
             const dark_color = document.getElementById('dark_color').value;
             const light_color = document.getElementById('light_color').value;
+            const light_opacity = document.getElementById('light_opacity').checked;
+            const font_color = document.getElementById('font_color').value;
             document.getElementById('result').innerHTML = '';
             const disArray = Array.from(new Set(battery_nums.split("\n")))
             disArray.forEach(battery_num => {
                 const urlText = getUrl(battery_num);
-                genQrCode(urlText, battery_num, light_color, dark_color)
+                genQrCode(urlText, battery_num, light_color, dark_color, font_color, light_opacity)
             })
         });
         document.getElementById('downloadPng').addEventListener('click', function () {
@@ -245,7 +253,7 @@
         });
     </script>
     <script>
-        function genQrCode(urlText, battery_num, light, dark) {
+        function genQrCode(urlText, battery_num, light, dark, fontColor, light_opacity) {
             QRCode.toString(urlText, {
                 type: "svg",
                 scale: 4,
@@ -262,27 +270,32 @@
                 div.className = 'svg-code'
                 div.innerHTML = svg
                 resultContainer.appendChild(div);
-                addTextSvg(battery_num, light, dark)
+                addTextSvg(battery_num, light, dark, fontColor, light_opacity)
             });
         }
-        function addTextSvg(battery_num, light, dark){
+        function addTextSvg(battery_num, light, dark, fontColor, light_opacity){
             const svg = document.querySelector(`#id${battery_num} svg`);
             const path = document.querySelectorAll(`#id${battery_num} svg path`)[0]
             const height = Number(svg.getAttribute('height'));
             const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
             const rate = Number(height / scale);
-            const words = lengthCutting(battery_num, 18)
+            const words = lengthCutting(battery_num, 15)
             const addUnit = 1 + words.length
-            const fontSize = 24 / rate
-            const addScale = addUnit * fontSize + fontSize / 2
+            const fontSize = 32 / rate
+            const yTop = 3;
+            const addScale = addUnit * fontSize + yTop
+            const padding = 10
             svg.setAttribute('height', height+(rate*addScale));
-            svg.setAttribute('viewBox', `0 0 ${scale} ${scale+addScale}`);
-            path.setAttribute('d', `M0 0h${scale}v${scale+addScale}H0z`)
+            svg.setAttribute('viewBox', `${-padding} ${-padding} ${scale+padding*2} ${scale+addScale+padding*2}`); 
+            if(light_opacity){
+                path.setAttribute('fill-opacity', "0")
+            }
+            path.setAttribute('d', `M${-padding} ${-padding}h${scale+padding*2}v${scale+addScale+padding*2}H${-padding}z`)
             const x = scale / 2
-            var innerHTML = `<text fill="${dark}" stroke="none" font-family="Arial" font-size="${fontSize + 1}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${scale+fontSize}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
+            var innerHTML = `<text fill="${fontColor}" stroke="none" font-family="Arial" font-size="${fontSize + 4}px" font-style="normal" font-weight="1000" text-decoration="normal" x="${x}" y="${scale+fontSize + yTop}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
             words.forEach((word, index) => {
-                const y = scale+ fontSize + 1+((index + 1)*fontSize)
-                innerHTML += `<text fill="${dark}" stroke="none" font-family="Arial" font-size="${fontSize}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
+                const y = scale+ fontSize + 3 * yTop +((index + 1)*fontSize)
+                innerHTML += `<text fill="${fontColor}" stroke="none" font-family="Arial" font-size="${fontSize}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
             })
             svg.innerHTML += innerHTML
         }
