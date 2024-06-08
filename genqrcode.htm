@@ -155,7 +155,7 @@
             <label for="text3">二维码背景颜色:</label>
             <input type="color" id="light_color" value="#ffffff">
             &nbsp;&nbsp;&nbsp;透明：
-            <input type="checkbox" id="light_opacity" enableAlpha checked>
+            <input type="checkbox" id="light_opacity" enableAlpha>
         </div>
         <div class="input-group">
             <label for="text3">文字颜色:</label>
@@ -278,23 +278,27 @@
             const path = document.querySelectorAll(`#id${battery_num} svg path`)[0]
             const height = Number(svg.getAttribute('height'));
             const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
-            const rate = Number(height / scale);
-            const words = lengthCutting(battery_num, 15)
-            const addUnit = 1 + words.length
+            var rate = Number(height / scale);
+            const padding = 80 / rate
             const fontSize = 32 / rate
-            const yTop = 3;
-            const addScale = addUnit * fontSize + yTop
-            const padding = 10
-            svg.setAttribute('height', height+(rate*addScale));
+
+            const fontTop = 36 / rate;
+            const words = lengthCutting(battery_num, 15)
+            const bigFontSize = fontSize + 4
+            const yTop = 40 / rate;
+            const firstY = scale+yTop + bigFontSize / 2
+            const addScale = yTop + bigFontSize / 2 + 37 / rate + words.length * (fontSize) - padding + 2 ;
+            const h = (scale+addScale+padding*2+padding)/(scale+padding*2+padding)*height + rate
+            svg.setAttribute('height', `${h}`);
             svg.setAttribute('viewBox', `${-padding} ${-padding} ${scale+padding*2} ${scale+addScale+padding*2}`); 
             if(light_opacity){
                 path.setAttribute('fill-opacity', "0")
             }
             path.setAttribute('d', `M${-padding} ${-padding}h${scale+padding*2}v${scale+addScale+padding*2}H${-padding}z`)
             const x = scale / 2
-            var innerHTML = `<text fill="${fontColor}" stroke="none" font-family="Arial" font-size="${fontSize + 4}px" font-style="normal" font-weight="1000" text-decoration="normal" x="${x}" y="${scale+fontSize + yTop}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
+            var innerHTML = `<text fill="${fontColor}" stroke="none" font-family="Arial" font-size="${bigFontSize}px" font-style="normal" font-weight="1000" text-decoration="normal" x="${x}" y="${firstY}" text-anchor="middle" dominant-baseline="alphabetic">浙品码</text>`
             words.forEach((word, index) => {
-                const y = scale+ fontSize + 3 * yTop +((index + 1)*fontSize)
+                const y = firstY + bigFontSize / 2 + 37 / rate +((index)*(fontSize / 2 + (20 / rate)))
                 innerHTML += `<text fill="${fontColor}" stroke="none" font-family="Arial" font-size="${fontSize}px" font-style="normal" font-weight="bold" text-decoration="normal" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="alphabetic">${word}</text>`
             })
             svg.innerHTML += innerHTML
