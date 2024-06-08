@@ -279,7 +279,7 @@
             const height = Number(svg.getAttribute('height'));
             const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
             var rate = Number(height / scale);
-            const padding = 80 / rate
+            const padding = 32 / rate
             const fontSize = 32 / rate
 
             const fontTop = 36 / rate;
@@ -287,7 +287,7 @@
             const bigFontSize = fontSize + 4
             const yTop = 40 / rate;
             const firstY = scale+yTop + bigFontSize / 2
-            const addScale = yTop + bigFontSize / 2 + 37 / rate + words.length * (fontSize) - padding + 2 ;
+            const addScale = yTop + bigFontSize / 2 + 37 / rate + words.length * (fontSize) - padding + 4;
             const h = (scale+addScale+padding*2+padding)/(scale+padding*2+padding)*height + rate
             svg.setAttribute('height', `${h}`);
             svg.setAttribute('viewBox', `${-padding} ${-padding} ${scale+padding*2} ${scale+addScale+padding*2}`); 
