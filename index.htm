@@ -173,6 +173,7 @@
         </div>
 
 <script src="./static/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="./static/info.js"></script>
 <script type="text/javascript">
     function loadImgs(reportPath) {
             var fileContainer = document.getElementById('rep2');
@@ -182,9 +183,11 @@
             img.alt = 'Image';
             fileContainer.appendChild(img);
         }
-    $(function () {
-        let windowHeight = window.outerHeight; // 屏幕的高度
-        let windowWidth = window.outerWidth; // 屏幕的宽度
+    function loadReportPath(battery_company){
+        var fileName = "./report/" + battery_company + ".jpg"
+        return fileName
+    }
+    function loadArgsOld(){
         $("#battery_num").html(decodeURIComponent(getQueryVariable("battery_num")));
         $("#battery_type").html(decodeURIComponent(getQueryVariable("battery_type")));
         $("#battery_company").html(decodeURIComponent(getQueryVariable("battery_company")));
@@ -194,6 +197,32 @@
         $("#battery_date").html(decodeURIComponent(getQueryVariable("battery_date")));
         $("#file_path").html(decodeURIComponent(getQueryVariable("file_path")));
         loadImgs(getQueryVariable("file_path"))
+    }
+    function loadArgsNew(){
+        $("#battery_num").html(decodeURIComponent(getQueryVariable("n")));
+        $("#battery_type").html(typeMap.get(decodeURIComponent(getQueryVariable("t"))));
+        const battery_company = companyMap.get(decodeURIComponent(getQueryVariable("c")))
+        var real_battery_company = battery_company;
+        if(battery_company.indexOf("-") > 0){
+            real_battery_company = battery_company.substring(0, battery_company.indexOf("-"))
+        }
+        $("#battery_company").html(real_battery_company);
+        $("#battery_size").html(decodeURIComponent(getQueryVariable("s")));
+        $("#battery_model").html(decodeURIComponent(getQueryVariable("m")));
+        $("#battery_kg").html(kgMap.get(decodeURIComponent(getQueryVariable("k"))));
+        $("#battery_date").html('20' + decodeURIComponent(getQueryVariable("d")));
+        const filePath = loadReportPath(battery_company)
+        $("#file_path").html(filePath);
+        loadImgs(filePath)
+    }
+    $(function () {
+        let windowHeight = window.outerHeight; // 屏幕的高度
+        let windowWidth = window.outerWidth; // 屏幕的宽度
+        if(getQueryVariable("battery_num")){
+            loadArgsOld()
+        }else{
+            loadArgsNew()
+        }
         $(".i-bc").on('click', 'span', function () {
             $(this).addClass('active').siblings().removeClass('active')
         })

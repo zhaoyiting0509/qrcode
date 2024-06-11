@@ -105,29 +105,37 @@
         </div>
         <div class="input-group">
             <label for="text1">蓄电池类型:</label>
-            <input type="text" id="battery_type" placeholder="蓄电池类型" value="锂电">
+            <select id="battery_type" name="battery_type">
+                <option value="1" selected>锂电</option>
+                <option value="2">铅酸</option>
+            </select>
         </div>
         <div class="input-group">
             <label for="text2">蓄电池生产企业:</label>
             <select id="battery_company" name="battery_company">
-                <option value="东莞新能安科技有限公司" selected>东莞新能安科技有限公司</option>
-                <option value="星恒电源(滁州)有限公司-24V">星恒电源(滁州)有限公司-48V 24A</option>
-                <option value="星恒电源(滁州)有限公司-48V">星恒电源(滁州)有限公司-48V 12A</option>
-                <option value="山东爱德邦智能科技有限公司">山东爱德邦智能科技有限公司</option>
-                <option value="厦门新能安科技有限公司" >厦门新能安科技有限公司</option>
-                <option value="台州爱德邦智能科技有限公司">台州爱德邦智能科技有限公司</option>
-                <option value="浙江超威创元实业有限公司-24V">浙江超威创元实业有限公司-DZ48NZ-24EM</option>
-                <option value="浙江超恒动力科技有限公司">浙江超恒动力科技有限公司</option>
-                <option value="湖州天丰电源有限公司">湖州天丰电源有限公司</option>
-                <option value="浙江超威创元实业有限公司-48V">浙江超威创元实业有限公司-48V 16A</option>
-                <option value="山东爱德邦智能科技有限公司-48V">山东爱德邦智能科技有限公司-DZ48NZ-24AM</option>
-                <option value="旭派电源有限公司">旭派电源有限公司</option>
-                <option value="天能帅福得能源股份有限公司">天能帅福得能源股份有限公司</option>
+                <option value="1" selected>东莞新能安科技有限公司</option>
+                <option value="2">星恒电源(滁州)有限公司-48V 24A</option>
+                <option value="3">星恒电源(滁州)有限公司-48V 12A</option>
+                <option value="4">山东爱德邦智能科技有限公司</option>
+                <option value="5">厦门新能安科技有限公司</option>
+                <option value="6">台州爱德邦智能科技有限公司</option>
+                <option value="7">浙江超威创元实业有限公司-DZ48NZ-24EM</option>
+                <option value="8">浙江超恒动力科技有限公司</option>
+                <option value="9">湖州天丰电源有限公司</option>
+                <option value="10">浙江超威创元实业有限公司-48V 16A</option>
+                <option value="11">山东爱德邦智能科技有限公司-DZ48NZ-24AM</option>
+                <option value="12">旭派电源有限公司</option>
+                <option value="13">天能帅福得能源股份有限公司</option>
             </select>
         </div>
         <div class="input-group">
             <label for="text3">蓄电池容量（Ah）:</label>
-            <input type="text" id="battery_size" placeholder="蓄电池容量（Ah）" value="24">
+            <select id="battery_size" name="battery_size">
+                <option value="12" selected>12</option>
+                <option value="16" selected>16</option>
+                <option value="20" selected>20</option>
+                <option value="24" selected>24</option>
+            </select>
         </div>
         <div class="input-group">
             <label for="text3">蓄电池型号:</label>
@@ -135,7 +143,11 @@
         </div>
         <div class="input-group">
             <label for="text3">蓄电池重量:</label>
-            <input type="text" id="battery_kg" placeholder="蓄电池重量" value="8.5±0.5(kg)">
+            <select id="battery_kg" name="battery_kg">
+                <option value="1" selected>6.5±0.5(kg)</option>
+                <option value="2" selected>7.5±0.5(kg)</option>
+                <option value="3" selected>8.5±0.5(kg)</option>
+            </select>
         </div>
         <div class="input-group">
             <label for="text3">生产日期:</label>
@@ -170,13 +182,14 @@
 
     <script src="./static/qrcode.min.js"></script>
     <script src="./static/jszip.min.js"></script>
+    <script src="./static/info.js"></script>
     <script>
         function loadReportPath(battery_company){
             var fileName = "./report/" + battery_company + ".jpg"
             return fileName
         }
         function loadImgs() {
-            var reportPath = loadReportPath(document.getElementById('battery_company').value.trim()); 
+            var reportPath = loadReportPath(companyMap.get(document.getElementById('battery_company').value.trim())); 
             var fileContainer = document.getElementById('images');
             fileContainer.innerHTML = ''; 
             var a = document.createElement('a');
@@ -194,20 +207,14 @@
             const battery_size = document.getElementById('battery_size').value;
             const battery_model = document.getElementById('battery_model').value;
             const battery_kg = document.getElementById('battery_kg').value;
-            const battery_date = document.getElementById('battery_date').value;
-            const reportPath = loadReportPath(battery_company)
-            var real_battery_company = battery_company;
-            if(battery_company.indexOf("-") > 0){
-                real_battery_company = battery_company.substring(0, battery_company.indexOf("-"))
-            }
-            const url = `index.htm?battery_num=${encodeURIComponent(battery_num)}`
-            +`&battery_type=${encodeURIComponent(battery_type)}`
-            +`&battery_company=${encodeURIComponent(real_battery_company)}`
-            +`&battery_size=${encodeURIComponent(battery_size)}`
-            +`&battery_model=${encodeURIComponent(battery_model)}`
-            +`&battery_kg=${encodeURIComponent(battery_kg)}`
-            +`&battery_date=${encodeURIComponent(battery_date)}`
-            +`&file_path=${reportPath}`;
+            const battery_date = document.getElementById('battery_date').value.substring(2);
+            const url = `?n=${encodeURIComponent(battery_num)}`
+            +`&t=${encodeURIComponent(battery_type)}`
+            +`&c=${encodeURIComponent(battery_company)}`
+            +`&s=${encodeURIComponent(battery_size)}`
+            +`&m=${encodeURIComponent(battery_model)}`
+            +`&k=${encodeURIComponent(battery_kg)}`
+            +`&d=${encodeURIComponent(battery_date)}`;
             return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
         }
         
