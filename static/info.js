@@ -12,6 +12,7 @@ companyMap.set("10","浙江超威创元实业有限公司-48V")
 companyMap.set("11","山东爱德邦智能科技有限公司-48V")
 companyMap.set("12","旭派电源有限公司")
 companyMap.set("13","天能帅福得能源股份有限公司")
+companyMap.set("14","肇庆国信通新能源科技有限公司")
 
 const kgMap = new Map();
 kgMap.set("1","6.5±0.5(kg)")
