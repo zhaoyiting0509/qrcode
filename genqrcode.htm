@@ -134,9 +134,9 @@
         <div class="input-group">
             <label for="text3">蓄电池容量（Ah）:</label>
             <select id="battery_size" name="battery_size">
-                <option value="12" selected>12</option>
-                <option value="16" selected>16</option>
-                <option value="20" selected>20</option>
+                <option value="12" >12</option>
+                <option value="16" >16</option>
+                <option value="20" >20</option>
                 <option value="24" selected>24</option>
             </select>
         </div>
@@ -147,9 +147,10 @@
         <div class="input-group">
             <label for="text3">蓄电池重量:</label>
             <select id="battery_kg" name="battery_kg">
-                <option value="1" selected>6.5±0.5(kg)</option>
-                <option value="2" selected>7.5±0.5(kg)</option>
+                <option value="1" >6.5±0.5(kg)</option>
+                <option value="2" >7.5±0.5(kg)</option>
                 <option value="3" selected>8.5±0.5(kg)</option>
+                <option value="4" >3.85kg</option>
             </select>
         </div>
         <div class="input-group">
@@ -290,11 +291,11 @@
             const scale = Number(svg.getAttribute('viewBox').split(" ")[3]);
             var rate = Number(height / scale);
             const padding = 16 / rate
-            const fontSize = 32 / rate
+            const fontSize = 34 / rate
 
             const fontTop = 36 / rate;
             const words = lengthCutting(battery_num, 15)
-            const bigFontSize = fontSize + 4
+            const bigFontSize = fontSize + 2
             const yTop = 40 / rate;
             const firstY = scale+yTop + bigFontSize / 2
             const addScale = yTop + bigFontSize / 2 + 37 / rate + words.length * (fontSize) - padding + 4;
