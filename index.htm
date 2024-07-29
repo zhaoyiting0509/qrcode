@@ -61,7 +61,7 @@
         }
     </style>
 </head>
-<body>
+<body id="body-content">
     <div class="i-t-logo">
         <img src="./static/logo.jpg">
     </div>
@@ -232,8 +232,22 @@
         let windowWidth = window.outerWidth; // 屏幕的宽度
         if(getQueryVariable("battery_num")){
             loadArgsOld()
-        }else{
+        }else if (getQueryVariable("n")){
             loadArgsNew()
+        }else {
+            let html = ''
+            html += '<div style="background-color: #333; color: #fff; padding: 20px 0; text-align: center;">'
+            html += '    <h1>蓄电池商品信息首页</h1>'
+            html += '</div>'
+            html += '<div style="width: 80%; margin: 20px auto; background: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">'
+            html += '    <p>欢迎来到蓄电池商品信息页面。我们致力于为您提供最新、最全面的蓄电池商品信息和选购指南。</p>'
+            html += '    <p>在这里，您可以找到各种品牌和型号的蓄电池，了解它们的性能、价格和用户评价。我们还提供专业的选购建议，帮助您根据需求选择最合适的蓄电池。</p>'
+            html += '    <p>我们的目标是为客户提供最可靠的信息，确保您在购买蓄电池时做出明智的决策。如果您有任何问题或需要更多信息，请随时联系我们。</p>'
+            html += '</div>'
+            html += '<div style="text-align: center; padding: 10px 0; position: fixed; width: 100%; bottom: 0;">'
+            html += '    备案号：<a style="#ff0000" href="https://beian.miit.gov.cn/" target="_blank">赣ICP备2024038374号-1</a>'
+            html += '</div>'
+            $("#body-content").html(html)
         }
         $(".i-bc").on('click', 'span', function () {
             $(this).addClass('active').siblings().removeClass('active')
