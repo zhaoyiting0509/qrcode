@@ -142,6 +142,7 @@
                     </div>
                     <div class="i-tcc i-tccp i-tsm">
                         <span>质量服务承诺</span>
+                        <div id="qa-pop"></div>
                     </div>
                 </div>
             </div>
@@ -187,15 +188,23 @@
 <script src="./static/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="./static/info.js"></script>
 <script type="text/javascript">
-    function loadImgs(reportPath) {
-            var fileContainer = document.getElementById('rep2');
-            fileContainer.innerHTML = ''; 
-            var img = document.createElement('img');
-            img.src = reportPath; 
-            img.alt = 'Image';
-            addResizeImgListener(img)
-            fileContainer.appendChild(img);
+    function loadImgs(reportPath, qaPath) {
+        var fileContainer = document.getElementById('rep2');
+        fileContainer.innerHTML = ''; 
+        var img = document.createElement('img');
+        img.src = reportPath; 
+        img.alt = 'Image';
+        fileContainer.appendChild(img);
+        // qa
+        if(qaPath !== ''){
+            var qaContainer = document.getElementById('qa-pop');
+            qaContainer.innerHTML = ''; 
+            var qaImg = document.createElement('img');
+            qaImg.src = qaPath; 
+            qaImg.alt = 'Image';
+            qaContainer.appendChild(qaImg);
         }
+    }
     function addResizeImgListener(eleImg){
         var store = {
             scale: 1
@@ -290,6 +299,15 @@
         var fileName = "./report/" + battery_company + ".jpg"
         return fileName
     }
+    function loadQaPath(cid){
+        if(qaMap.has(cid)){
+            var qaPath = qaMap.get(cid)
+            var fileName = "./qa/" + qaPath + ".jpg"
+            return fileName;
+        } else {
+            return '';
+        }
+    }
     function loadArgsOld(){
         $("#battery_num").html(decodeURIComponent(getQueryVariable("battery_num")));
         $("#battery_type").html(decodeURIComponent(getQueryVariable("battery_type")));
@@ -299,7 +317,7 @@
         $("#battery_kg").html(decodeURIComponent(getQueryVariable("battery_kg")));
         $("#battery_date").html(decodeURIComponent(getQueryVariable("battery_date")));
         $("#file_path").html(decodeURIComponent(getQueryVariable("file_path")));
-        loadImgs(getQueryVariable("file_path"))
+        loadImgs(getQueryVariable("file_path"), '')
     }
     function loadArgsNew(){
         $("#battery_num").html(decodeURIComponent(getQueryVariable("n")));
@@ -316,7 +334,8 @@
         $("#battery_date").html('20' + decodeURIComponent(getQueryVariable("d")));
         const filePath = loadReportPath(battery_company)
         $("#file_path").html(filePath);
-        loadImgs(filePath)
+        const qaPath = loadQaPath(decodeURIComponent(getQueryVariable("c")))
+        loadImgs(filePath, qaPath)
     }
     $(function () {
         let windowHeight = window.outerHeight; // 屏幕的高度

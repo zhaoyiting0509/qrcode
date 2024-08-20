@@ -13,12 +13,19 @@ companyMap.set("11","山东爱德邦智能科技有限公司-48V")
 companyMap.set("12","旭派电源有限公司")
 companyMap.set("13","天能帅福得能源股份有限公司-48V-24Ah")
 companyMap.set("14","肇庆国信通新能源科技有限公司")
-companyMap.set("15","天能电池集团股份有限公司")
+companyMap.set("15","天能电池集团股份有限公司-6-DZF-12")
 companyMap.set("16","星恒电源(滁州)有限公司-14A")
 companyMap.set("17","浙江超威创元实业有限公司-48V-20A")
 companyMap.set("18","浙江超威动力能源有限公司-6-DZF-12")
-companyMap.set("19","超威电源集团有限公司长兴郎山分公司")
+companyMap.set("19","超威电源集团有限公司")
 companyMap.set("20","天能帅福得能源股份有限公司-48V-20Ah")
+companyMap.set("21","天能电池集团股份有限公司-6-DZF-16")
+
+const qaMap = new Map();
+qaMap.set("18","浙江超威动力能源有限公司")
+qaMap.set("19","浙江超威动力能源有限公司")
+qaMap.set("15","天能电池集团股份有限公司")
+qaMap.set("21","天能电池集团股份有限公司")
 
 const kgMap = new Map();
 kgMap.set("1","6.5±0.5(kg)")
