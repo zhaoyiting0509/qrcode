@@ -337,6 +337,34 @@
         const qaPath = loadQaPath(decodeURIComponent(getQueryVariable("c")))
         loadImgs(filePath, qaPath)
     }
+    function loadArgsById(){
+        let id = decodeURIComponent(getQueryVariable("id"))
+        fetch('api/get/' + id)
+            .then(response => response.json())
+            .then(data => {
+                let value = data.value;
+                $("#battery_num").html(decodeURIComponent(getQueryVariable("n", value)));
+                $("#battery_type").html(typeMap.get(decodeURIComponent(getQueryVariable("t", value))));
+                const battery_company = companyMap.get(decodeURIComponent(getQueryVariable("c", value)))
+                var real_battery_company = battery_company;
+                if(battery_company.indexOf("-") > 0){
+                    real_battery_company = battery_company.substring(0, battery_company.indexOf("-"))
+                }
+                $("#battery_company").html(real_battery_company);
+                $("#battery_size").html(decodeURIComponent(getQueryVariable("s", value)));
+                $("#battery_model").html(decodeURIComponent(getQueryVariable("m", value)));
+                $("#battery_kg").html(kgMap.get(decodeURIComponent(getQueryVariable("k", value))));
+                $("#battery_date").html('20' + decodeURIComponent(getQueryVariable("d", value)));
+                const filePath = loadReportPath(battery_company)
+                $("#file_path").html(filePath);
+                const qaPath = loadQaPath(decodeURIComponent(getQueryVariable("c", value)))
+                loadImgs(filePath, qaPath)
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        
+    }
     $(function () {
         let windowHeight = window.outerHeight; // 屏幕的高度
         let windowWidth = window.outerWidth; // 屏幕的宽度
@@ -344,6 +372,8 @@
             loadArgsOld()
         }else if (getQueryVariable("n")){
             loadArgsNew()
+        }else if (getQueryVariable("id")){
+            loadArgsById()
         }else {
             let html = ''
             html += '<div style="background-color: #333; color: #fff; padding: 20px 0; text-align: center;">'
@@ -390,9 +420,7 @@
             }
         })
     })
-
-    function getQueryVariable(variable) {
-        var query = window.location.search.substring(1);
+    function getQueryVariable(variable, query=window.location.search.substring(1)) {
         var vars = query.split("&");
         for (var i = 0; i < vars.length; i++) {
             var pair = vars[i].split("=");
@@ -400,7 +428,6 @@
         }
         return (false);
     }
-
     function save() {
         var linkman = $("#txtLinkMan").val();
         if ($.trim(linkman) == "") {

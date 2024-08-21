@@ -208,27 +208,49 @@
         loadImgs()
         document.getElementById('battery_company').addEventListener('change', loadImgs);
 
-        function getUrl(battery_num){
+        function getUrl(battery_num, callback){
             const battery_type = document.getElementById('battery_type').value;
             const battery_company = document.getElementById('battery_company').value;
             const battery_size = document.getElementById('battery_size').value;
             const battery_model = document.getElementById('battery_model').value;
             const battery_kg = document.getElementById('battery_kg').value;
             const battery_date = document.getElementById('battery_date').value.substring(2);
-            const url = `?n=${encodeURIComponent(battery_num)}`
+            const params = `n=${encodeURIComponent(battery_num)}`
             +`&t=${encodeURIComponent(battery_type)}`
             +`&c=${encodeURIComponent(battery_company)}`
             +`&s=${encodeURIComponent(battery_size)}`
             +`&m=${encodeURIComponent(battery_model)}`
             +`&k=${encodeURIComponent(battery_kg)}`
             +`&d=${encodeURIComponent(battery_date)}`;
-            return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
+            uploadUrl(params, callback)
+            return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "?" + params;
+        }
+
+        function uploadUrl(params, callback){
+            fetch('api/upload/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: params
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                let url = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + "?id=" + data.id
+                callback(url)
+            })
+            .catch(error => {
+                console.error('Error Upload data:', error);
+            });
         }
         
         document.getElementById('preview').addEventListener('click', function() {
             const battery_nums = document.getElementById('battery_num').value;
-            const url = getUrl(battery_nums.split("\n")[0]);
-            window.open(url, '_blank');
+            getUrl(battery_nums.split("\n")[0], function(url){
+                window.open(url, '_blank');
+            });
         });
         document.getElementById('generateQR').addEventListener('click', function() {
             const battery_nums = document.getElementById('battery_num').value;
@@ -239,8 +261,9 @@
             document.getElementById('result').innerHTML = '';
             const disArray = Array.from(new Set(battery_nums.split("\n")))
             disArray.forEach(battery_num => {
-                const urlText = getUrl(battery_num);
-                genQrCode(urlText, battery_num, light_color, dark_color, font_color, light_opacity)
+                getUrl(battery_num, function(url){
+                    genQrCode(url, battery_num, light_color, dark_color, font_color, light_opacity)
+                });
             })
         });
         document.getElementById('downloadPng').addEventListener('click', function () {
