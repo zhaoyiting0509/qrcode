@@ -20,7 +20,8 @@ companyMap.set("18","浙江超威动力能源有限公司-6-DZF-12")
 companyMap.set("19","超威电源集团有限公司长兴郎山分公司")
 companyMap.set("20","天能帅福得能源股份有限公司-48V-20Ah")
 companyMap.set("21","天能电池集团股份有限公司-6-DZF-16")
-companyMap.set("22","超威电源集团有限公司")
+companyMap.set("22","超威电源集团有限公司-6-DZF-16")
+companyMap.set("23","超威电源集团有限公司-6-DZF-12")
 
 const qaMap = new Map();
 qaMap.set("18","浙江超威动力能源有限公司")
