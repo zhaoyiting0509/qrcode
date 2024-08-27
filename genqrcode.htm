@@ -95,7 +95,8 @@
                 width: auto;
             }
         }
-    </style>  
+    </style>
+    <link rel="stylesheet" href="./static/message.min.css">  
 </head>
 <body>
     <div class="container">
@@ -185,12 +186,15 @@
         <button id="generateQR">生成二维码</button>
         <button id="downloadPng">png打包下载</button>
         <button id="downloadSvg">svg打包下载</button>
+        <button id="cpoyLink">复制链接</button>
         <div id="result"></div>
     </div>
 
     <script src="./static/qrcode.min.js"></script>
     <script src="./static/jszip.min.js"></script>
     <script src="./static/info.js"></script>
+    <script src="./static/clipboard.min.js"></script>
+    <script src="./static/message.min.js"></script>
     <script>
         function loadReportPath(battery_company){
             var fileName = "./report/" + battery_company + ".jpg"
@@ -208,6 +212,24 @@
         }
         loadImgs()
         document.getElementById('battery_company').addEventListener('change', loadImgs);
+
+        loadClipboardListener()
+        function loadClipboardListener(){
+            var clipboard = new ClipboardJS('#cpoyLink', {
+                text: function () {
+                    const battery_nums = document.getElementById('battery_num').value;
+                    const disArray = Array.from(new Set(battery_nums.split("\n")))
+                    return disArray.map(bn => getUrl(bn)).join("\n")
+                },
+            });
+            clipboard.on('success', function (e) {
+                Qmsg.info("复制成功",{});
+            });
+
+            clipboard.on('error', function (e) {
+                Qmsg.info("复制失败",{});
+            });
+        }
 
         function getUrl(battery_num){
             const battery_type = document.getElementById('battery_type').value;
