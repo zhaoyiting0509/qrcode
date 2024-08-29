@@ -99,7 +99,14 @@
     <link rel="stylesheet" href="./static/message.min.css">  
 </head>
 <body>
-    <div class="container">
+    <div class="loginConainer container" id="loginMask">
+        <div class="input-group" style="margin-top: 200px;">
+            <label for="text3">密码:</label>
+            <input type="text" id="pwd" placeholder="输入密码">
+        </div>
+        <button id="login">登录</button>
+    </div>
+    <div class="container"  id="content">
         <h1>二维码生成与预览</h1>
         <div class="input-group">
             <label for="text1">电池编号（可填多个）:</label>
@@ -195,7 +202,33 @@
     <script src="./static/info.js"></script>
     <script src="./static/clipboard.min.js"></script>
     <script src="./static/message.min.js"></script>
+    <script src="./static/sha256.js"></script>
     <script>
+        function checkPwd(pwd){
+            let encodeVal = SHA256(pwd)
+            return encodeVal === '72fe2cfa3e8ae2a5fb7c31a41aded79204beee1bcfb6bdd32af0e73d3d3ed6f8'
+        }
+
+        pwd = localStorage.getItem("pwd")
+        if (checkPwd(pwd)) {
+            document.getElementById('loginMask').style.display="none";
+            document.getElementById('content').style.display="";
+        }else{
+            document.getElementById('loginMask').style.display="";
+            document.getElementById('content').style.display="none";
+        }
+
+        document.getElementById('login').addEventListener('click', function() {
+            const pwd = document.getElementById('pwd').value;
+            flag = checkPwd(pwd)
+            if (flag) {
+                localStorage.setItem("pwd", pwd)
+                window.location.href = 'genqrcode.htm'
+            } else {
+                alert("密码错误，请重试")
+            }
+        });
+
         function loadReportPath(battery_company){
             var fileName = "./report/" + battery_company + ".jpg"
             return fileName
