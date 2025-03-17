@@ -168,6 +168,13 @@
             </select>
         </div>
         <div class="input-group">
+            <label for="text3">销售单位入库情况:</label>
+            <select id="storage" name="storage">
+                <option value="1" >已入库</option>
+                <option value="0" >未入库</option>
+            </select>
+        </div>
+        <div class="input-group">
             <label for="text3">生产日期:</label>
             <input type="text" id="battery_date" placeholder="生产日期" value="2024-06-01">
         </div>
@@ -272,6 +279,7 @@
             const battery_size = document.getElementById('battery_size').value;
             const battery_model = document.getElementById('battery_model').value;
             const battery_kg = document.getElementById('battery_kg').value;
+            const storage = document.getElementById('storage').value;
             const battery_date = document.getElementById('battery_date').value.substring(2);
             const url = `?n=${encodeURIComponent(battery_num)}`
             +`&t=${encodeURIComponent(battery_type)}`
@@ -279,6 +287,7 @@
             +`&s=${encodeURIComponent(battery_size)}`
             +`&m=${encodeURIComponent(battery_model)}`
             +`&k=${encodeURIComponent(battery_kg)}`
+            +`&o=${encodeURIComponent(storage)}`
             +`&d=${encodeURIComponent(battery_date)}`;
             return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + url;
         }

@@ -92,7 +92,7 @@
                         <div class="i-tc">
                             <div class="i-tcc">
                                 <div class="i-tccc-t" style="text-align:right;margin-right:10px;border-color:red;">
-                                    <button id="btnDc" type="button" style="border-color:red;" class="layui-btn layui-btn-primary layui-btn-sm">销售单位已入库</button>
+                                    <button id="battery_storage" type="button" style="border-color:red;" class="layui-btn layui-btn-primary layui-btn-sm">销售单位已入库</button>
                                 </div>  
                                 <div class="i-tccc-t">
                                     <span class="i-tspanl">电池编号：</span>
@@ -331,6 +331,11 @@
         $("#battery_size").html(decodeURIComponent(getQueryVariable("s")));
         $("#battery_model").html(decodeURIComponent(getQueryVariable("m")));
         $("#battery_kg").html(kgMap.get(decodeURIComponent(getQueryVariable("k"))));
+        if(decodeURIComponent(getQueryVariable("o")) === '0'){
+            $("#battery_storage").html('销售单位未入库')
+        }else{
+            $("#battery_storage").html('销售单位已入库')
+        }
         $("#battery_date").html('20' + decodeURIComponent(getQueryVariable("d")));
         const filePath = loadReportPath(battery_company)
         $("#file_path").html(filePath);
