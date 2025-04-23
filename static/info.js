@@ -42,6 +42,7 @@ kgMap.set("4","3.85±0.5(kg)")
 kgMap.set("5","4.5±0.5(kg)")
 kgMap.set("6","1.0±0.1(kg)")
 kgMap.set("7","2.1(kg)")
+kgMap.set("8","2.3(kg)")
 
 const typeMap = new Map();
 typeMap.set("1","锂电")
